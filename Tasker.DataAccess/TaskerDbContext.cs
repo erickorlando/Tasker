@@ -11,6 +11,8 @@ namespace Tasker.DataAccess
             
         }
 
+        public DbSet<Pastel> Pasteles { get; set; } = default!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -27,6 +29,7 @@ namespace Tasker.DataAccess
                 {
                     new() { Id = 1, Tabla = "Factura", UltimoNumero = 5913 }
                 });
+
         }
     }
 }

@@ -30,6 +30,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IFacturaService, FacturaService>();
+builder.Services.AddTransient<IPastelesService, PastelesService>();
 
 builder.Services.AddHangfireServer();
 
@@ -57,6 +58,17 @@ app.MapPost("api/TareaConReintentos", (IBackgroundJobClient backgroundJob) =>
 {
     backgroundJob.Schedule(() => TareaProgramada.Ejecutar(), TimeSpan.FromSeconds(30));
 });
+
+app.MapPost("api/Pasteles", (IBackgroundJobClient backgroundJob, string carpeta, CancellationToken cancellationToken) =>
+{
+    backgroundJob.Schedule<IPastelesService>(service => service.AddPasteles(carpeta, cancellationToken),
+        TimeSpan.FromSeconds(20));
+
+    return Results.Ok();
+});
+
+app.MapGet("api/Pasteles", async (IPastelesService pasteles, CancellationToken cancellationToken)
+    => Results.Ok(await pasteles.ListAsync(cancellationToken)));
 
 using (var scope = app.Services.CreateScope())
 {
