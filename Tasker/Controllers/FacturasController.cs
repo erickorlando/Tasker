@@ -38,5 +38,13 @@ namespace Tasker.Controllers
                 Respuesta = "Se creó la tarea programada"
             }));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
+        {
+            var data = await _service.ListAsync(cancellationToken);
+
+            return Ok(data);
+        }
     }
 }
